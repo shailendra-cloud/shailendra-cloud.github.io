@@ -410,7 +410,7 @@
   .pub-venue em { color: var(--text-2); }
   .pub-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 9px; }
   .tag { padding: 1px 10px; border-radius: 999px; color: #fff; font-size: 12.5px; font-weight: 900; line-height: 22px; }
-  .tag-journal { background: #3333b2; } .tag-conf { background: #0891b2; } .tag-chapter { background: #7030a0; } .tag-status { background: #f97316; }
+  .tag-journal { background: #3333b2; } .tag-conf { background: #0891b2; } .tag-chapter { background: #7030a0; } .tag-status { background: #f97316; } .tag-sci { background: #16a34a; }
   .act { padding: 0 11px; border: 1.5px solid var(--line-2); border-radius: 999px; background: var(--surface); color: var(--text-2); font: 700 12.5px/21px var(--sans); text-decoration: none; cursor: pointer; }
   .act:hover { border-color: var(--pink); color: var(--pink); }
   .pub-empty { padding: 24px; border-radius: 16px; background: var(--ice); color: var(--text-2); }
@@ -537,7 +537,7 @@
       <div class="hub" role="group" aria-label="Publication metrics, November 2026">
         <div class="pod pod-a" style="--c:#16a34a">
           <span class="pod-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h11a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"/><path d="M8 8h6M8 12h6"/></svg></span>
-          <strong>66</strong><span class="pod-lbl">Publications</span><span class="pod-sub">SCI/Scopus, total impact factor 80.1</span>
+          <strong data-count="all">77</strong><span class="pod-lbl">Publications</span><span class="pod-sub"><span data-count="sci">32</span> SCI/SCIE journal papers, total impact factor <span data-count="jif">63.7</span></span>
         </div>
         <div class="hub-core">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>
@@ -556,7 +556,7 @@
           <strong>25</strong><span class="pod-lbl">i10-index</span>
         </div>
       </div>
-      <p class="hub-note">Citations, h-index and i10-index: Google Scholar, November 2026. Publication count and impact factor: March 2025.</p>
+      <p class="hub-note">Citations, h-index and i10-index: Google Scholar, November 2026. Impact factor: Web of Science JCR 2026, for journals indexed today.</p>
     </div>
   </div>
 </section>
@@ -749,7 +749,7 @@
         <div class="ach-ring"><span>Research<br>achievements</span></div>
         <article class="ach-card ach-a" style="--c:#2563eb">
           <span class="t-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h11a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"/><path d="M8 8h6M8 12h6"/></svg></span>
-          <div><h3>Journal papers</h3><strong>9</strong><p>SCI/SCIE papers in reputed journals between 2022 and early 2025, alongside 10 international conference papers.</p></div>
+          <div><h3>Journal papers</h3><strong data-count="journal">35</strong><p><span data-count="sci">32</span> in SCI/SCIE journals at the time of publication and the rest in Scopus journals, with a total impact factor of <span data-count="jif">63.7</span> (JCR 2026). Also <span data-count="conf">35</span> conference papers and <span data-count="chapter">7</span> book chapters.</p></div>
         </article>
         <article class="ach-card ach-b" style="--c:#7c3aed">
           <span class="t-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></span>
@@ -893,6 +893,7 @@
         <div class="chips" role="group" aria-label="Filter publications by type">
           <button class="chip" type="button" data-type="all" aria-pressed="true">All<span class="n"></span></button>
           <button class="chip" type="button" data-type="journal" aria-pressed="false">Journals<span class="n"></span></button>
+          <button class="chip" type="button" data-type="sci" aria-pressed="false">SCI/SCIE<span class="n"></span></button>
           <button class="chip" type="button" data-type="conf" aria-pressed="false">Conferences<span class="n"></span></button>
           <button class="chip" type="button" data-type="chapter" aria-pressed="false">Book chapters<span class="n"></span></button>
         </div>
@@ -1015,77 +1016,105 @@
    st: status label such as 'Accepted' (optional)
    repo: name of your own GitHub repository (optional); its Code button
          appears automatically once that repository is public
+   sci: 1 for a journal paper that was in an SCI/SCIE-indexed journal when published (optional)
+   jif: the journal's latest Journal Impact Factor (Clarivate JCR), only for journals
+        indexed in Web of Science today (optional); the page adds these up for the total
+   The counts in the header, the achievements card and the filter
+   buttons are computed from this list, so they stay in step with it.
    ===================================================================== */
 const PUBS = [
+  { y: 2026, t: 'journal', title: 'MLEM reconstruction with fractional-order multi-notch spectral regularization', a: 'A. P. Singh, M. Khurana, S. Tiwari', v: 'IEEE Signal Processing Letters', url: 'https://ieeexplore.ieee.org/document/11683357/', sci: 1, jif: 3.6 },
+  { y: 2026, t: 'journal', title: 'Low-light driver drowsiness detection for real-time safety assistance using dual attention mechanisms in deep learning model', a: 'S. Saxena, Angel, M. Khurana, S. Tiwari, H. K. Shakya', v: 'Scientific Reports', d: 'Nature Portfolio, vol. 16', doi: '10.1038/s41598-026-44442-3', sci: 1, jif: 4.9 },
+  { y: 2026, t: 'journal', title: 'USRNet: A simple yet effective underwater scene restoration network', a: 'S. Thakur, J. Bhattacharya, S. Tiwari', v: 'Journal of Visual Communication and Image Representation', d: 'Elsevier, Art. no. 104710', sci: 1, jif: 2.8 },
   { y: 2026, t: 'conf', st: 'Accepted', title: 'PW-STAD: Photon-Weighted Structure-Tensor Anisotropic Diffusion for Sparse-View CT Reconstruction', a: 'S. Tiwari, M. Khurana, A. Tiwari', v: 'Indian Conference on Computer Vision, Graphics and Image Processing (ICVGIP 2026)', repo: 'PW-STAD' },
   { y: 2026, t: 'conf', st: 'Accepted', title: 'SIA: A Subject Identifiability Auditing Framework for Detecting Patient-Level Leakage in Medical Imaging Benchmarks', a: 'A. Tiwari, S. Tiwari', v: 'Indian Conference on Computer Vision, Graphics and Image Processing (ICVGIP 2026)', code: 'https://github.com/anuragtiwari575/SIA-subject-identifiability-audit' },
-  { y: 2026, t: 'journal', title: 'MLEM reconstruction with fractional-order multi-notch spectral regularization', a: 'A. P. Singh, M. Khurana, S. Tiwari', v: 'IEEE Signal Processing Letters', url: 'https://ieeexplore.ieee.org/document/11683357/' },
-  { y: 2026, t: 'journal', title: 'Low-light driver drowsiness detection for real-time safety assistance using dual attention mechanisms in deep learning model', a: 'S. Saxena, Angel, M. Khurana, S. Tiwari, H. K. Shakya', v: 'Scientific Reports', d: 'Nature Portfolio, vol. 16', doi: '10.1038/s41598-026-44442-3' },
   { y: 2026, t: 'conf', title: 'RED-CTNet: A Mish-activated residual encoder-decoder for low-dose CT reconstruction', a: 'A. P. Singh, M. Khurana, S. Tiwari', v: 'IEEE International Conference on Interdisciplinary Approaches in Technology and Management for Social Innovation (IATMSI 2026)', doi: '10.1109/IATMSI68868.2026.11466013' },
-  { y: 2026, t: 'journal', title: 'USRNet: A simple yet effective underwater scene restoration network', a: 'S. Thakur, J. Bhattacharya, S. Tiwari', v: 'Journal of Visual Communication and Image Representation', d: 'Elsevier, Art. no. 104710' },
 
-  { y: 2025, t: 'journal', title: 'Leveraging feature fusion ensemble of VGG16 and ResNet-50 for automated potato leaf abnormality detection in precision agriculture', a: 'A. K. Trivedi, T. Mahajan, T. Maheshwari, R. Mehta, S. Tiwari', v: 'Soft Computing', d: 'Springer, vol. 29, no. 4, pp. 2263–2277', doi: '10.1007/s00500-025-10523-0' },
+  { y: 2025, t: 'journal', title: 'Leveraging feature fusion ensemble of VGG16 and ResNet-50 for automated potato leaf abnormality detection in precision agriculture', a: 'A. K. Trivedi, T. Mahajan, T. Maheshwari, R. Mehta, S. Tiwari', v: 'Soft Computing', d: 'Springer, vol. 29, no. 4, pp. 2263–2277', doi: '10.1007/s00500-025-10523-0', sci: 1 },
   { y: 2025, t: 'conf', title: 'Attention based unsupervised CT reconstruction technique for low-dose CT', a: 'R. Gothwal, S. Tiwari, S. Shivani', v: '19th EAI International Conference on Body Area Networks (BodyNets 2025)', d: 'IIT (BHU) Varanasi' },
   { y: 2025, t: 'conf', title: 'A real-time driver safety assistance: proactive accident care using deep learning and attention mechanisms', a: 'S. Saxena, Angel, A. Gill, S. Tiwari', v: '19th EAI International Conference on Body Area Networks (BodyNets 2025)', d: 'IIT (BHU) Varanasi' },
   { y: 2025, t: 'conf', title: 'Precision pest identification in crops using EfficientNet-based ensemble model', a: 'S. Tiwari, T. Maheshwari, B. Bhalla, S. Gupta, T. Mahajan, Akanshal', v: '11th International Conference on Mathematics and Computing (ICMC 2025)', d: 'IIT Bhilai' },
 
-  { y: 2024, t: 'journal', title: 'Deep attentive multimodal learning for food information enhancement via early-stage heterogeneous fusion', a: 'A. Saklani, S. Tiwari, H. S. Pannu', v: 'The Visual Computer', d: 'Springer', doi: '10.1007/s00371-024-03546-5' },
-  { y: 2024, t: 'journal', title: 'Ameliorating multimodal food classification using state of the art deep learning techniques', a: 'A. Saklani, S. Tiwari, H. S. Pannu', v: 'Multimedia Tools and Applications', d: 'Springer, vol. 83, no. 21' },
-  { y: 2024, t: 'journal', title: 'CovLIS-MUnet segmentation model for Covid-19 lung infection regions in CT images', a: 'M. Devi, S. Singh, S. Tiwari', v: 'Neural Computing and Applications', d: 'Springer, vol. 36, no. 13' },
-  { y: 2024, t: 'journal', title: 'LUNA: Loss-construct unsupervised network adjustment for low-dose CT image reconstruction', a: 'R. Gothwal, S. Tiwari, S. Shivani', v: 'IEEE Access' },
-  { y: 2024, t: 'conf', title: 'REED-NET: Residual enhanced encoder-decoder network for low-dose CT reconstruction', a: 'P. Jotwani, R. Gothwal, S. Tiwari', v: 'International Conference on Innovations in Computational Intelligence and Computer Vision (ICICV 2024)', d: 'MUJ Jaipur' },
+  { y: 2024, t: 'journal', title: 'Deep attentive multimodal learning for food information enhancement via early-stage heterogeneous fusion', a: 'A. Saklani, S. Tiwari, H. S. Pannu', v: 'The Visual Computer', d: 'Springer', doi: '10.1007/s00371-024-03546-5', sci: 1, jif: 3.4 },
+  { y: 2024, t: 'journal', title: 'Ameliorating multimodal food classification using state of the art deep learning techniques', a: 'A. Saklani, S. Tiwari, H. S. Pannu', v: 'Multimedia Tools and Applications', d: 'Springer, vol. 83, no. 21', doi: '10.1007/s11042-023-17850-0', sci: 1 },
+  { y: 2024, t: 'journal', title: 'CovLIS-MUnet segmentation model for Covid-19 lung infection regions in CT images', a: 'M. Devi, S. Singh, S. Tiwari', v: 'Neural Computing and Applications', d: 'Springer, vol. 36, no. 13', doi: '10.1007/s00521-024-09459-7', sci: 1 },
+  { y: 2024, t: 'journal', title: 'LUNA: Loss-construct unsupervised network adjustment for low-dose CT image reconstruction', a: 'R. Gothwal, S. Tiwari, S. Shivani', v: 'IEEE Access', sci: 1, jif: 4.2 },
+  { y: 2024, t: 'conf', title: 'REED-NET: Residual enhanced encoder-decoder network for low-dose CT reconstruction', a: 'P. Jotwani, R. Gothwal, S. Tiwari', v: 'International Conference on Innovations in Computational Intelligence and Computer Vision (ICICV 2024)', d: 'MUJ Jaipur', doi: '10.1007/978-981-97-6992-6_8' },
+  { y: 2024, t: 'chapter', title: 'Key role of convolutional neural networks in biomedical imaging applications', a: 'M. Devi, S. Singh, S. Tiwari', v: 'Advanced Research in Electronic Devices for Biomedical and mHealth', d: 'pp. 101–125' },
 
-  { y: 2023, t: 'journal', title: 'Social network analysis: a survey on measure, structure, language information analysis, privacy, and applications', a: 'S. S. Singh, V. Srivastava, A. Kumar, S. Tiwari, D. Singh, H.-N. Lee', v: 'ACM Transactions on Asian and Low-Resource Language Information Processing', d: 'vol. 22, no. 5' },
-  { y: 2023, t: 'journal', title: 'Deep learning techniques in CT image reconstruction and segmentation: a systematic literature review', a: 'M. Devi, S. Singh, S. Tiwari', v: 'International Journal of Nanotechnology', d: 'Inderscience, vol. 20, no. 5' },
-  { y: 2023, t: 'journal', title: 'Human-computer interaction using deep fusion model-based facial expression recognition system', a: 'S. Umer, R. K. Rout, S. Tiwari, A. A. AlZubi, J. M. Alanazi, Y. Kulakov', v: 'Computer Modeling in Engineering & Sciences', d: 'Tech Science, vol. 135, no. 2' },
-  { y: 2023, t: 'conf', title: 'Raphael at ArAIEval shared task: understanding persuasive language and tone, an LLM approach', a: 'U. Shukla, M. Vyas, S. Tiwari', v: 'Proceedings of ArabicNLP 2023', d: 'Singapore' },
-  { y: 2023, t: 'conf', title: 'Fake news detection using heterogeneous information from multimedia content', a: 'A. Saklani, H. S. Pannu, S. Tiwari', v: '5th International Conference on Deep Learning, Artificial Intelligence and Robotics (ICDLAIR 2023)', d: 'NIT Kurukshetra' },
-  { y: 2023, t: 'chapter', title: 'Real time face detection-based automobile safety system using computer vision and supervised machine learning', a: 'N. S. Kapoor, M. Anand, S. Tiwari, S. Shivani, R. Singh', v: 'Advancement of Deep Learning and its Applications in Object Detection and Recognition' },
+  { y: 2023, t: 'journal', title: 'Social network analysis: a survey on measure, structure, language information analysis, privacy, and applications', a: 'S. S. Singh, V. Srivastava, A. Kumar, S. Tiwari, D. Singh, H.-N. Lee', v: 'ACM Transactions on Asian and Low-Resource Language Information Processing', d: 'vol. 22, no. 5', doi: '10.1145/3539732', sci: 1, jif: 2.7 },
+  { y: 2023, t: 'journal', title: 'Deep learning techniques in CT image reconstruction and segmentation: a systematic literature review', a: 'M. Devi, S. Singh, S. Tiwari', v: 'International Journal of Nanotechnology', d: 'Inderscience, vol. 20, no. 5', doi: '10.1504/IJNT.2023.134033', sci: 1, jif: 0.3 },
+  { y: 2023, t: 'journal', title: 'Human-computer interaction using deep fusion model-based facial expression recognition system', a: 'S. Umer, R. K. Rout, S. Tiwari, A. A. AlZubi, J. M. Alanazi, Y. Kulakov', v: 'Computer Modeling in Engineering & Sciences', d: 'Tech Science, vol. 135, no. 2', doi: '10.32604/cmes.2022.023312', sci: 1, jif: 2.9 },
+  { y: 2023, t: 'journal', title: 'Novel deep transfer learning model for COVID-19 patient detection using X-ray chest images', a: 'N. Kumar, M. Gupta, D. Gupta, S. Tiwari', v: 'Journal of Ambient Intelligence and Humanized Computing', d: 'Springer, vol. 14, no. 1, pp. 469–478', doi: '10.1007/s12652-021-03306-6', sci: 1 },
+  { y: 2023, t: 'conf', title: 'Raphael at ArAIEval shared task: understanding persuasive language and tone, an LLM approach', a: 'U. Shukla, M. Vyas, S. Tiwari', v: 'Proceedings of ArabicNLP 2023', d: 'Singapore', doi: '10.18653/v1/2023.arabicnlp-1.60' },
+  { y: 2023, t: 'conf', title: 'Fake news detection using heterogeneous information from multimedia content', a: 'A. Saklani, H. S. Pannu, S. Tiwari', v: '5th International Conference on Deep Learning, Artificial Intelligence and Robotics (ICDLAIR 2023)', d: 'NIT Kurukshetra', doi: '10.1007/978-3-031-60935-0_39' },
+  { y: 2023, t: 'conf', title: 'Enhancing low-dose CT imaging reconstruction through fusion of MLEM and deep convolutional neural network priors', a: 'R. Gothwal, S. Tiwari, S. Shivani', v: '7th IEEE International Conference on Image Information Processing (ICIIP 2023)', d: 'pp. 145–150', doi: '10.1109/ICIIP61524.2023.10537642' },
 
-  { y: 2022, t: 'journal', title: 'Computational medical image reconstruction techniques: a comprehensive review', a: 'R. Gothwal, S. Tiwari, S. Shivani', v: 'Archives of Computational Methods in Engineering', d: 'Springer, vol. 29, no. 7' },
-  { y: 2022, t: 'conf', title: 'Multimodal classification via visual and lingual feature layer fusion', a: 'A. Saklani, H. S. Pannu, S. Tiwari', v: 'International Conference on Innovations in Computational Intelligence and Computer Vision (ICICV 2022)', d: 'MUJ Jaipur' },
-  { y: 2022, t: 'conf', title: 'IoT-based real-time crop and fertilizer prediction for precision farming 4.0', a: 'S. Tiwari, R. Garg, N. Kushal, M. Khurana', v: 'International Conference on Innovations in Computational Intelligence and Computer Vision (ICICV 2022)', d: 'MUJ Jaipur' },
+  { y: 2022, t: 'journal', title: 'Computational medical image reconstruction techniques: a comprehensive review', a: 'R. Gothwal, S. Tiwari, S. Shivani', v: 'Archives of Computational Methods in Engineering', d: 'Springer, vol. 29, no. 7', doi: '10.1007/s11831-022-09785-w', sci: 1, jif: 12.9 },
+  { y: 2022, t: 'journal', title: 'An efficient stacked deep transfer learning model for automated diagnosis of Lyme disease', a: 'A. A. Alzubi, S. Tiwari, K. Walia, J. M. Alanazi, F. I. Alzobi, R. Verma', v: 'Computational Intelligence and Neuroscience', d: 'Hindawi, vol. 2022, art. no. 2933015', doi: '10.1155/2022/2933015', sci: 1 },
+  { y: 2022, t: 'conf', title: 'Multimodal classification via visual and lingual feature layer fusion', a: 'A. Saklani, H. S. Pannu, S. Tiwari', v: 'International Conference on Innovations in Computational Intelligence and Computer Vision (ICICV 2022)', d: 'MUJ Jaipur', doi: '10.1007/978-981-99-2602-2_28' },
+  { y: 2022, t: 'conf', title: 'IoT-based real-time crop and fertilizer prediction for precision farming 4.0', a: 'S. Tiwari, R. Garg, N. Kushal, M. Khurana', v: 'International Conference on Innovations in Computational Intelligence and Computer Vision (ICICV 2022)', d: 'MUJ Jaipur', doi: '10.1007/978-981-99-2602-2_53' },
+  { y: 2022, t: 'chapter', title: 'Real time face detection-based automobile safety system using computer vision and supervised machine learning', a: 'N. S. Kapoor, M. Anand, Priyanshu, S. Tiwari, S. Shivani, R. Singh', v: 'Advancement of Deep Learning and its Applications in Object Detection and Recognition', d: 'pp. 63–85' },
+  { y: 2022, t: 'chapter', title: 'Survey on vehicle detection, identification and count using CNN-based YOLO architecture and related applications', a: 'G. Garg, S. Tiwari, S. Shivani, A. Malhi', v: 'Advancement of Deep Learning and its Applications in Object Detection and Recognition', d: 'pp. 197–210' },
 
-  { y: 2020, t: 'chapter', title: 'Progressive advancements on security challenges, issues and solutions in e-health systems', a: 'S. Tiwari, Manju, S. Shivani, R. Gothwal', v: 'Intelligent Data Security Solutions for e-Health Applications', d: 'Elsevier' },
+  { y: 2021, t: 'journal', title: 'Complex diffusion regularisation-based low dose CT image reconstruction', a: 'K. Kaur, S. Tiwari', v: 'International Journal of Biomedical Engineering and Technology', d: 'Inderscience, vol. 35, no. 1, pp. 37–69', doi: '10.1504/IJBET.2021.112833' },
+  { y: 2021, t: 'journal', title: 'Screening of COVID-19 patients using deep learning and IoT framework', a: 'H. Kaushik, D. Singh, S. Tiwari, M. Kaur, C.-W. Jeong, Y. Nam, M. A. Khan', v: 'Computers, Materials & Continua', d: 'Tech Science Press, vol. 69, no. 3, pp. 3459–3475', doi: '10.32604/cmc.2021.017337', sci: 1, jif: 2.4 },
+  { y: 2021, t: 'journal', title: 'Bottom-boosting differential evolution based digital image security analysis', a: 'D. Ghai, S. Tiwari, N. N. Das', v: 'Journal of Information Security and Applications', d: 'Elsevier', sci: 1, jif: 4.4 },
+  { y: 2021, t: 'journal', title: 'CT image reconstruction using NLMfuzzyCD regularization method', a: 'M. Devi, S. Singh, S. Tiwari', v: 'Current Medical Imaging', d: 'Bentham Science, vol. 17, no. 9, pp. 1103–1113', doi: '10.2174/1573405617999210112195819', sci: 1, jif: 1.1 },
+  { y: 2021, t: 'journal', title: 'A survey of soft computing approaches in biomedical imaging', a: 'M. Devi, S. Singh, S. Tiwari, S. C. Patel, M. T. Ayana', v: 'Journal of Healthcare Engineering', d: 'Hindawi, vol. 2021, art. no. 1563844', doi: '10.1155/2021/1563844', sci: 1 },
+  { y: 2021, t: 'journal', title: 'CT image segmentation method of liver tumor based on artificial intelligence enabled medical imaging', a: 'L. Liu, L. Wang, D. Xu, H. Zhang, A. Sharma, S. Tiwari, M. Kaur, M. Khurana, M. A. Shah', v: 'Mathematical Problems in Engineering', d: 'Hindawi, vol. 2021, art. no. 9919507', doi: '10.1155/2021/9919507', sci: 1 },
+  { y: 2021, t: 'journal', title: 'The effect of biofeedback therapy combined with comprehensive nursing intervention on the quality of life of patients with functional constipation based on dynamic magnetic resonance defecation', a: 'Z. Kuang, S. Dai, Y. Xiao, W. Luo, J. Tian, A. Sharma, S. Tiwari, M. Gupta, M. Kaur, M. A. Shah', v: 'Journal of Healthcare Engineering', d: 'Hindawi, vol. 2021, art. no. 9947373', doi: '10.1155/2021/9947373', sci: 1 },
+  { y: 2021, t: 'journal', title: 'Efficient single image dehazing model using metaheuristics-based brightness channel prior', a: 'V. Kehar, V. Chopra, B. K. Singh, S. Tiwari', v: 'Mathematical Problems in Engineering', d: 'Hindawi, vol. 2021, art. no. 5584464', doi: '10.1155/2021/5584464', sci: 1 },
+  { y: 2021, t: 'chapter', title: 'Recent advancements in medical imaging: a machine learning approach', a: 'N. Dang, S. Tiwari, M. Khurana, K. V. Arya', v: 'Studies in Big Data, vol. 82', d: 'Springer, pp. 189–212', doi: '10.1007/978-981-15-9492-2_10' },
 
-  { y: 2019, t: 'journal', title: 'Feature selection for image steganalysis using Lévy flight-based grey wolf optimization', a: 'Y. Pathak, K. V. Arya, S. Tiwari', v: 'Multimedia Tools and Applications', d: 'Springer', doi: '10.1007/s11042-018-6155-6' },
-  { y: 2019, t: 'journal', title: 'Efficient image reconstruction using fourth-order partial derivatives based guided image filter', a: 'Y. Pathak, K. V. Arya, S. Tiwari', v: 'Multimedia Tools and Applications', d: 'Springer', doi: '10.1007/s11042-018-6840-5' },
-  { y: 2019, t: 'journal', title: 'Simulation of intelligent target hitting in obstructed path using physical body animation and genetic algorithm', a: 'S. Shivani, S. Tiwari', v: 'Multimedia Tools and Applications', d: 'Springer', doi: '10.1007/s11042-018-6575-3' },
-  { y: 2019, t: 'journal', title: 'Content-based image retrieval based on supervised learning with combination of orthogonal-LBP and statistical moments', a: 'V. P. Singh, R. Srivastava, Y. Pathak, S. Tiwari, K. Kaur', v: 'Modern Physics Letters B', d: 'World Scientific' },
-  { y: 2019, t: 'chapter', title: 'Dictionary learning based image reconstruction techniques for big medical data', a: 'S. Tiwari, K. Kaur, K. V. Arya', v: 'Handbook of Multimedia Information Security: Techniques and Applications', d: 'Springer' },
+  { y: 2020, t: 'journal', title: 'Optimized time synchronized multilayer MAC protocol for WSN using relay nodes', a: 'M. Khurana, S. Shivani, S. Tiwari, B. Sharma, M. S. Obaidat, K.-F. Hsiao', v: 'Ad Hoc & Sensor Wireless Networks', d: 'Old City Publishing, vol. 48, no. 1–2, pp. 1–17', sci: 1, jif: 0.4 },
+  { y: 2020, t: 'conf', title: 'MirGAN: Medical image reconstruction using generative adversarial networks', a: 'N. Dang, M. Khurana, S. Tiwari', v: 'International Conference on Computing, Communication and Security (ICCCS 2020)', d: 'IEEE', doi: '10.1109/ICCCS49678.2020.9277127' },
+  { y: 2020, t: 'conf', title: 'Instrument classification using image based transfer learning', a: 'U. Shukla, U. Tiwari, V. Chawla, S. Tiwari', v: 'International Conference on Computing, Communication and Security (ICCCS 2020)', d: 'IEEE', doi: '10.1109/ICCCS49678.2020.9277366' },
+  { y: 2020, t: 'conf', title: 'Optimized Z-buffer using divide and conquer', a: 'N. Bakshi, S. Shivani, S. Tiwari, M. Khurana', v: 'International Conference on Innovations in Computational Intelligence and Computer Vision (ICICV 2020)', d: 'Springer AISC, vol. 1189, pp. 41–47', doi: '10.1007/978-981-15-6067-5_6' },
+  { y: 2020, t: 'conf', title: 'Computed tomography image reconstruction using fuzzy complex diffusion regularization', a: 'M. Devi, S. Singh, S. Tiwari', v: 'International Conference on Innovations in Computational Intelligence and Computer Vision (ICICV 2020)', d: 'Springer AISC, vol. 1189, pp. 214–224', doi: '10.1007/978-981-15-6067-5_24' },
+  { y: 2020, t: 'chapter', title: 'Progressive advancements in security challenges, issues, and solutions in e-health systems', a: 'R. Gothwal, S. Tiwari, S. Shivani, M. Khurana', v: 'Intelligent Data Security Solutions for e-Health Applications', d: 'Elsevier, pp. 237–254', doi: '10.1016/B978-0-12-819511-6.00013-3' },
+
+  { y: 2019, t: 'journal', title: 'Feature selection for image steganalysis using Lévy flight-based grey wolf optimization', a: 'Y. Pathak, K. V. Arya, S. Tiwari', v: 'Multimedia Tools and Applications', d: 'Springer', doi: '10.1007/s11042-018-6155-6', sci: 1 },
+  { y: 2019, t: 'journal', title: 'An efficient low-dose CT reconstruction technique using partial derivatives based guided image filter', a: 'Y. Pathak, K. V. Arya, S. Tiwari', v: 'Multimedia Tools and Applications', d: 'Springer, vol. 78, no. 11, pp. 14733–14752', doi: '10.1007/s11042-018-6840-5', sci: 1 },
+  { y: 2019, t: 'journal', title: 'Simulation of intelligent target hitting in obstructed path using physical body animation and genetic algorithm', a: 'S. Shivani, S. Tiwari', v: 'Multimedia Tools and Applications', d: 'Springer', doi: '10.1007/s11042-018-6575-3', sci: 1 },
+  { y: 2019, t: 'journal', title: 'Content-based image retrieval based on supervised learning and statistical-based moments', a: 'V. P. Singh, R. Srivastava, Y. Pathak, S. Tiwari, K. Kaur', v: 'Modern Physics Letters B', d: 'World Scientific, vol. 33, no. 19, art. no. 1950213', doi: '10.1142/S0217984919502130', sci: 1, jif: 3.0 },
+  { y: 2019, t: 'journal', title: 'Computed tomography reconstruction on distributed storage using hybrid regularization approach', a: 'S. Tiwari, K. Kaur, Y. Pathak, S. Shivani, K. Kaur', v: 'Modern Physics Letters B', d: 'World Scientific, vol. 33, no. 6, art. no. 1950063', doi: '10.1142/S0217984919500635', sci: 1, jif: 3.0 },
   { y: 2019, t: 'conf', title: 'On the choice and evaluation of regularization priors for CT/PET image reconstruction', a: 'R. Gothwal, S. Tiwari, S. Shivani', v: '2nd International Conference on Advanced Computing and Software Engineering (ICACSE 2019)', d: 'KNIT Sultanpur' },
+  { y: 2019, t: 'conf', title: 'CT image reconstruction using fourth-order PDE based AD regularization', a: 'Y. Pathak, D. Agarwal, S. Tiwari, M. Khurana', v: '5th IEEE International Conference on Image Information Processing (ICIIP 2019)', d: 'pp. 161–166', doi: '10.1109/ICIIP47207.2019.8985747' },
+  { y: 2019, t: 'chapter', title: 'A study on dictionary learning based image reconstruction techniques for big medical data', a: 'S. Tiwari, K. Kaur, K. V. Arya', v: 'Handbook of Multimedia Information Security: Techniques and Applications', d: 'Springer, pp. 377–393', doi: '10.1007/978-3-030-15887-3_17' },
 
-  { y: 2018, t: 'journal', title: 'Low-dose CT image reconstruction using gain intervention-based dictionary learning', a: 'Y. Pathak, K. V. Arya, S. Tiwari', v: 'Modern Physics Letters B', d: 'World Scientific', doi: '10.1142/S0217984918501488' },
-  { y: 2018, t: 'journal', title: 'Fourth-order partial differential equations based anisotropic diffusion model for low-dose CT images', a: 'Y. Pathak, K. V. Arya, S. Tiwari', v: 'Modern Physics Letters B', d: 'World Scientific' },
-  { y: 2018, t: 'journal', title: 'Computed tomography reconstruction on distributed storage using hybrid regularization approach', a: 'S. Tiwari, K. Kaur, Y. Pathak, S. Shivani, K. Kaur', v: 'Modern Physics Letters B', d: 'World Scientific' },
-  { y: 2018, t: 'journal', title: 'An efficient and robust approach for biomedical image retrieval using Zernike moments', a: 'Y. Kumar, A. Aggarwal, S. Tiwari, K. Singh', v: 'Biomedical Signal Processing and Control', d: 'vol. 39, pp. 459–473', doi: '10.1016/j.bspc.2017.08.018' },
-  { y: 2018, t: 'journal', title: 'Providing security and privacy to huge and vulnerable songs repository using visual cryptography', a: 'S. Shivani, S. Tiwari, K. K. Mishra, et al.', v: 'Multimedia Tools and Applications', d: 'Springer' },
-  { y: 2018, t: 'journal', title: 'Complex diffusion regularization based low-dose CT image reconstruction', a: 'K. Kaur, S. Tiwari', v: 'International Journal of Biomedical Engineering and Technology', d: 'Inderscience' },
+  { y: 2018, t: 'journal', title: 'Low-dose CT image reconstruction using gain intervention-based dictionary learning', a: 'Y. Pathak, K. V. Arya, S. Tiwari', v: 'Modern Physics Letters B', d: 'World Scientific', doi: '10.1142/S0217984918501488', sci: 1, jif: 3.0 },
+  { y: 2018, t: 'journal', title: 'Fourth-order partial differential equations based anisotropic diffusion model for low-dose CT images', a: 'Y. Pathak, K. V. Arya, S. Tiwari', v: 'Modern Physics Letters B', d: 'World Scientific', doi: '10.1142/S0217984918503001', sci: 1, jif: 3.0 },
+  { y: 2018, t: 'journal', title: 'An efficient and robust approach for biomedical image retrieval using Zernike moments', a: 'Y. Kumar, A. Aggarwal, S. Tiwari, K. Singh', v: 'Biomedical Signal Processing and Control', d: 'vol. 39, pp. 459–473', doi: '10.1016/j.bspc.2017.08.018', sci: 1, jif: 5.7 },
+  { y: 2018, t: 'journal', title: 'Providing security and privacy to huge and vulnerable songs repository using visual cryptography', a: 'S. Shivani, S. Tiwari, K. K. Mishra, et al.', v: 'Multimedia Tools and Applications', d: 'Springer', doi: '10.1007/s11042-017-5240-6', sci: 1 },
 
   { y: 2017, t: 'journal', title: 'A variational framework for low-dose sinogram restoration', a: 'S. Tiwari', v: 'International Journal of Biomedical Engineering and Technology', d: 'vol. 24, no. 4', doi: '10.1504/IJBET.2017.085440' },
-  { y: 2017, t: 'conf', title: 'Low-dose image reconstruction using complex diffusion', a: 'K. Kaur, S. Tiwari', v: 'International Conference on Computational Intelligence (ICCI 2017)', d: 'IEEE CPS' },
+  { y: 2017, t: 'conf', title: 'Low-dose CT image reconstruction using complex diffusion regularization', a: 'K. Kaur, S. Tiwari', v: 'International Conference on Computational Intelligence: Theories, Applications and Future Directions (ICCI 2017)', d: 'Springer AISC, vol. 799, pp. 657–668', doi: '10.1007/978-981-13-1135-2_50' },
 
-  { y: 2016, t: 'journal', title: 'A hybrid-cascaded framework for PET and SPECT image reconstruction', a: 'S. Tiwari, R. Srivastava', v: 'Journal of Medical Imaging and Health Informatics', d: 'vol. 6, no. 4', doi: '10.1166/jmihi.2016.1779' },
-  { y: 2016, t: 'conf', title: 'A non-linear modified CONVEF-AD based approach for low-dose sinogram restoration', a: 'S. Tiwari, R. Srivastava, K. V. Arya', v: 'International Conference on Computer Vision and Image Processing (CVIP 2016)', d: 'IIT Roorkee; AISC, Springer' },
-  { y: 2016, t: 'conf', title: 'Regularization based modified SART iterative method for CT image reconstruction', a: 'K. V. Arya, S. Tiwari, Y. Pathak', v: '9th International Conference on Developments in eSystems Engineering (DeSE 2016)', d: 'Liverpool & Leeds, UK' },
-  { y: 2016, t: 'conf', title: 'Regularization based simultaneous algebraic reconstruction techniques for computed tomography', a: 'S. Tiwari, D. Chouksey, V. Todwal', v: '9th International Conference on Contemporary Computing (IC3 2016)', d: 'Noida' },
-  { y: 2016, t: 'conf', title: 'Facial recognition using histogram of Gabor phase patterns and self-organizing maps', a: 'S. Tiwari, K. V. Arya, G. Upadhyay, S. Upadhyay, P. Sharma', v: '11th International Conference on Industrial and Information Systems (ICIIS 2016)', d: 'IIT Roorkee' },
-  { y: 2016, t: 'conf', title: 'Score level fusion of iris and fingerprint using wavelet features', a: 'S. Tiwari, S. Tripathi, K. V. Arya', v: '4th International Conference on Parallel, Distributed and Grid Computing (PDGC 2016)', d: 'JUIT Waknaghat' },
-  { y: 2016, t: 'conf', title: 'Real-time vehicle detection and tracking', a: 'K. V. Arya, S. Tiwari, S. Behwal', v: '13th International Conference on Electrical Engineering/Electronics, Computer, Telecommunications and Information Technology (ECTI-CON 2016)', d: 'Chiang Mai, Thailand' },
+  { y: 2016, t: 'journal', title: 'A hybrid-cascaded iterative framework for positron emission tomography and single-photon emission computed tomography image reconstruction', a: 'S. Tiwari, R. Srivastava', v: 'Journal of Medical Imaging and Health Informatics', d: 'vol. 6, no. 4', doi: '10.1166/jmihi.2016.1779', sci: 1 },
+  { y: 2016, t: 'conf', title: 'A non-linear modified CONVEF-AD based approach for low-dose sinogram restoration', a: 'S. Tiwari, R. Srivastava, K. V. Arya', v: 'International Conference on Computer Vision and Image Processing (CVIP 2016)', d: 'IIT Roorkee; AISC, Springer', doi: '10.1007/978-981-10-2104-6_6' },
+  { y: 2016, t: 'conf', title: 'Regularization based modified SART iterative method for CT image reconstruction', a: 'K. V. Arya, S. Tiwari, Y. Pathak', v: '9th International Conference on Developments in eSystems Engineering (DeSE 2016)', d: 'Liverpool & Leeds, UK', doi: '10.1109/DeSE.2016.57' },
+  { y: 2016, t: 'conf', title: 'Regularization based simultaneous algebraic reconstruction techniques for computed tomography', a: 'S. Tiwari, D. Chouksey, V. Todwal', v: '9th International Conference on Contemporary Computing (IC3 2016)', d: 'Noida', doi: '10.1109/IC3.2016.7880219' },
+  { y: 2016, t: 'conf', title: 'Facial recognition using histogram of Gabor phase patterns and self-organizing maps', a: 'S. Tiwari, K. V. Arya, G. Upadhyay, S. Upadhyay, P. Sharma', v: '11th International Conference on Industrial and Information Systems (ICIIS 2016)', d: 'IIT Roorkee', doi: '10.1109/ICIINFS.2016.8263063' },
+  { y: 2016, t: 'conf', title: 'Score level fusion of iris and fingerprint using wavelet features', a: 'S. Tiwari, S. Tripathi, K. V. Arya', v: '4th International Conference on Parallel, Distributed and Grid Computing (PDGC 2016)', d: 'JUIT Waknaghat', doi: '10.1109/PDGC.2016.7913239' },
+  { y: 2016, t: 'conf', title: 'Real-time vehicle detection and tracking', a: 'K. V. Arya, S. Tiwari, S. Behwal', v: '13th International Conference on Electrical Engineering/Electronics, Computer, Telecommunications and Information Technology (ECTI-CON 2016)', d: 'Chiang Mai, Thailand', doi: '10.1109/ECTICon.2016.7561327' },
 
   { y: 2015, t: 'journal', title: 'An OSEM-based hybrid-cascaded framework for PET/SPECT image reconstruction', a: 'S. Tiwari, R. Srivastava', v: 'International Journal of Biomedical Engineering and Technology', d: 'vol. 18, no. 4', doi: '10.1504/IJBET.2015.071008' },
-  { y: 2015, t: 'conf', title: 'An efficient and modified median root prior based framework for PET/SPECT reconstruction algorithm', a: 'S. Tiwari, R. Srivastava', v: '8th International Conference on Contemporary Computing (IC3 2015)', d: 'Noida' },
-  { y: 2015, t: 'conf', title: 'A probabilistic patch based hybrid framework for CT/PET image reconstruction', a: 'S. Tiwari, R. Srivastava', v: '3rd International Conference on Advanced Computing, Networking and Informatics (ICACNI 2015)', d: 'Smart Innovation, Systems and Technologies, vol. 43, Springer' },
-  { y: 2015, t: 'conf', title: 'A hybrid-cascaded framework for MLEM based image reconstruction', a: 'S. Tiwari, R. Srivastava', v: 'International Conference on Signal Processing and Communication (ICSC 2015)', d: 'Noida' },
+  { y: 2015, t: 'conf', title: 'An efficient and modified median root prior based framework for PET/SPECT reconstruction algorithm', a: 'S. Tiwari, R. Srivastava', v: '8th International Conference on Contemporary Computing (IC3 2015)', d: 'Noida', doi: '10.1109/IC3.2015.7346643' },
+  { y: 2015, t: 'conf', title: 'A probabilistic patch based hybrid framework for CT/PET image reconstruction', a: 'S. Tiwari, R. Srivastava', v: '3rd International Conference on Advanced Computing, Networking and Informatics (ICACNI 2015)', d: 'Smart Innovation, Systems and Technologies, vol. 43, Springer', doi: '10.1007/978-81-322-2538-6_33' },
+  { y: 2015, t: 'conf', title: 'A hybrid-cascaded framework for MLEM based image reconstruction', a: 'S. Tiwari, R. Srivastava', v: 'International Conference on Signal Processing and Communication (ICSC 2015)', d: 'Noida', doi: '10.1109/ICSPCom.2015.7150663' },
   { y: 2015, t: 'conf', title: 'On the evaluation and selection of priors for MLEM based CT and PET image reconstruction', a: 'S. Tiwari, R. Srivastava', v: 'International Conference on Emerging Trends in Information Technology (ICETIT 2015)', d: 'BBAU Lucknow' },
+  { y: 2015, t: 'conf', title: 'An efficient approach for the prediction of G-protein coupled receptors and their subfamilies', a: 'A. K. Tiwari, R. Srivastava, S. Srivastava, S. Tiwari', v: '3rd International Conference on Advanced Computing, Networking and Informatics (ICACNI 2015)', d: 'Springer SIST, vol. 44, pp. 577–584', doi: '10.1007/978-81-322-2529-4_60' },
 
-  { y: 2014, t: 'conf', title: 'A PDE based expectation maximization algorithm adapted to Poisson noise for medical image reconstruction', a: 'S. Tiwari, R. Srivastava', v: '14th IEEE International Symposium on Signal Processing and Information Technology (ISSPIT 2014)', d: 'Noida' },
+  { y: 2014, t: 'conf', title: 'A PDE based expectation maximization algorithm adapted to Poisson noise for medical image reconstruction', a: 'S. Tiwari, R. Srivastava', v: '14th IEEE International Symposium on Signal Processing and Information Technology (ISSPIT 2014)', d: 'Noida', doi: '10.1109/ISSPIT.2014.7300577' },
   { y: 2014, t: 'conf', title: 'An efficient hybrid-cascaded framework for emission computed tomography using OSEM image reconstruction algorithm', a: 'S. Tiwari, R. Srivastava', v: 'International Conference on Recent Cognizance in Wireless Communication & Image Processing (ICRCWIP 2014)', d: 'Jaipur' },
-  { y: 2014, t: 'chapter', title: 'Research and developments in medical image reconstruction methods and its applications', a: 'S. Tiwari, R. Srivastava', v: 'Research Developments in Computer Vision and Image Processing: Methodologies and Applications', d: 'IGI Global, ch. 14, pp. 274–312' },
+  { y: 2014, t: 'chapter', title: 'Research and developments in medical image reconstruction methods and its applications', a: 'S. Tiwari, R. Srivastava', v: 'Research Developments in Computer Vision and Image Processing: Methodologies and Applications', d: 'IGI Global, ch. 14, pp. 274–312; reprinted in Medical Imaging: Concepts, Methodologies, Tools, and Applications (2016)', doi: '10.4018/978-1-4666-4558-5.ch014' },
 
   { y: 2013, t: 'conf', title: 'A complex diffusion prior based Bayesian statistical reconstruction approach for low-dose X-ray computed tomography', a: 'S. Tiwari, R. Srivastava', v: 'International Workshop/Conference on Bayesian Theory and Applications (IWCBTA 2013)', d: 'BHU Varanasi' },
+
   { y: 2012, t: 'conf', title: 'Regularized MLEM reconstruction algorithm adapted to Poisson noise for SPECT/PET images', a: 'S. Tiwari, R. Srivastava', v: 'Proceedings of AISC 2012', d: 'IIT (BHU) Varanasi' },
-  { y: 2010, t: 'conf', title: 'Scalable sequential pattern mining algorithm for sequence of transaction', a: 'S. Tiwari, H. Shakya, S. Semwal', v: '4th International Multi Conference on Intelligent Systems and Nanotechnology (IISN 2010)', d: 'Haryana' }
+
+  { y: 2010, t: 'conf', title: 'Scalable sequential pattern mining algorithm for sequence of transaction', a: 'S. Tiwari, H. Shakya, S. Semwal', v: '4th International Multi Conference on Intelligent Systems and Nanotechnology (IISN 2010)', d: 'Haryana' },
 ];
 
 (function () {
@@ -1163,6 +1192,16 @@ const PUBS = [
     });
   });
 
+  /* ---------- Counts shown elsewhere on the page, computed from PUBS ---------- */
+  safe(() => {
+    const n = { all: PUBS.length, sci: PUBS.filter((p) => p.sci).length,
+      jif: PUBS.reduce((s, p) => s + (p.jif || 0), 0).toFixed(1) };
+    ['journal', 'conf', 'chapter'].forEach((t) => { n[t] = PUBS.filter((p) => p.t === t).length; });
+    document.querySelectorAll('[data-count]').forEach((el) => {
+      if (n[el.dataset.count] !== undefined) el.textContent = n[el.dataset.count];
+    });
+  });
+
   /* ---------- Publications: filter, search, cite ---------- */
   safe(() => {
     const TYPES = { journal: 'Journal', conf: 'Conference', chapter: 'Book chapter' };
@@ -1178,7 +1217,7 @@ const PUBS = [
 
     chips.forEach((ch) => {
       const t = ch.dataset.type;
-      const n = t === 'all' ? PUBS.length : PUBS.filter((p) => p.t === t).length;
+      const n = t === 'all' ? PUBS.length : PUBS.filter((p) => (t === 'sci' ? p.sci : p.t === t)).length;
       const nEl = ch.querySelector('.n');
       if (nEl) nEl.textContent = n;
       ch.addEventListener('click', () => {
@@ -1196,6 +1235,7 @@ const PUBS = [
         '<div class="pub-venue"><em>' + esc(p.v) + '</em>' + (p.d ? ', ' + esc(p.d) : '') + '</div>' +
         '<div class="pub-meta">' +
           '<span class="tag tag-' + p.t + '">' + TYPES[p.t] + '</span>' +
+          (p.sci ? '<span class="tag tag-sci">SCI/SCIE</span>' : '') +
           (p.st ? '<span class="tag tag-status">' + esc(p.st) + '</span>' : '') +
           (p.doi ? '<a class="act" href="https://doi.org/' + esc(p.doi) + '" ' + ext + '>DOI</a>' : '') +
           (p.code ? '<a class="act" href="' + esc(p.code) + '" ' + ext + '>Code</a>' : '') +
@@ -1206,7 +1246,7 @@ const PUBS = [
 
     function render() {
       const items = PUBS.filter((p) =>
-        (type === 'all' || p.t === type) &&
+        (type === 'all' || p.t === type || (type === 'sci' && p.sci)) &&
         (!query || (p.title + ' ' + p.a + ' ' + p.v + ' ' + (p.d || '') + ' ' + p.y).toLowerCase().includes(query)));
       const years = Array.from(new Set(items.map((p) => p.y))).sort((a, b) => b - a);
       listEl.innerHTML = years.length
