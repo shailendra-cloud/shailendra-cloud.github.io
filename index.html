@@ -367,6 +367,8 @@
 
   .cards-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
   @media (max-width: 760px) { .cards-2 { grid-template-columns: minmax(0, 1fr); } }
+  .cards-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  @media (max-width: 980px) { .cards-3 { grid-template-columns: minmax(0, 1fr); } }
   .info-card { display: flex; flex-direction: column; gap: 8px; padding: 22px; border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); }
   .info-card .top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
   .info-card .amount { font: 700 28px var(--serif); color: var(--c, var(--indigo)); }
@@ -542,7 +544,7 @@
       <div class="hub" role="group" aria-label="Publication metrics, November 2026">
         <div class="pod pod-a" style="--c:#16a34a">
           <span class="pod-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h11a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"/><path d="M8 8h6M8 12h6"/></svg></span>
-          <strong data-count="all">77</strong><span class="pod-lbl">Publications</span><span class="pod-sub"><span data-count="sci">32</span> SCI/SCIE journal papers, cumulative impact factor <span data-count="jif">87.5</span></span>
+          <strong data-count="all">79</strong><span class="pod-lbl">Publications</span><span class="pod-sub"><span data-count="sci">32</span> SCI/SCIE journal papers, cumulative impact factor <span data-count="jif">87.5</span></span>
         </div>
         <div class="hub-core">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>
@@ -620,7 +622,7 @@
             <li class="more"><time>2026</time><span>LOSO benchmarking for camera-based drowsiness detection accepted at <strong>IEEE DELCON 2026</strong>.</span></li>
             <li class="more"><time>2026</time><span>Robust inner-speech EEG modelling accepted at <strong>ICIIS 2026</strong>.</span></li>
             <li class="more"><time>2026</time><span><em>USRNet</em> for underwater scene restoration published in the <strong>Journal of Visual Communication and Image Representation</strong>.</span></li>
-            <li class="more"><time>2026</time><span><em>RED-CTNet</em> for low-dose CT reconstruction published at <strong>IEEE IATMSI 2026</strong>.</span></li>
+            <li class="more"><time>2026</time><span>Three papers published at <strong>IEEE IATMSI 2026</strong>: <em>RED-CTNet</em> for low-dose CT, <em>MSGNet</em> for underwater image restoration and <em>Multimodal FactCheckNet</em> for fake-news detection.</span></li>
             <li class="more"><time>2025</time><span>Patent application <em>Fasal Kavach</em> published (Indian application 202511005304).</span></li>
           </ol>
           <button class="link-btn" id="news-toggle" type="button" aria-expanded="false" aria-controls="news">Show all news</button>
@@ -754,7 +756,7 @@
         <div class="ach-ring"><span>Research<br>achievements</span></div>
         <article class="ach-card ach-a" style="--c:#2563eb">
           <span class="t-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h11a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"/><path d="M8 8h6M8 12h6"/></svg></span>
-          <div><h3>Journal papers</h3><strong data-count="journal">35</strong><p><span data-count="sci">32</span> in SCI/SCIE journals at the time of publication and the rest in Scopus journals, with a cumulative impact factor of <span data-count="jif">87.5</span>. Also <span data-count="conf">35</span> conference papers and <span data-count="chapter">7</span> book chapters.</p></div>
+          <div><h3>Journal papers</h3><strong data-count="journal">35</strong><p><span data-count="sci">32</span> in SCI/SCIE journals at the time of publication and the rest in Scopus journals, with a cumulative impact factor of <span data-count="jif">87.5</span>. Also <span data-count="conf">37</span> conference papers and <span data-count="chapter">7</span> book chapters.</p></div>
         </article>
         <article class="ach-card ach-b" style="--c:#7c3aed">
           <span class="t-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></span>
@@ -766,7 +768,7 @@
         </article>
         <article class="ach-card ach-d" style="--c:#f97316">
           <span class="t-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10M7 8h10M15 20 8 8h2a4 4 0 0 0 0-8" transform="translate(0 0)"/></svg></span>
-          <div><h3>Funded projects</h3><strong>₹2.37 Cr</strong><p>Co-PI on a DST-FIST grant and an ACT Centre grant.</p></div>
+          <div><h3>Funded projects</h3><strong>₹2.25 Cr</strong><p>Co-PI, DST-FIST grant “Graphics, Vision and Visualization” (3 years). Also Co-PI on a ₹12 lakh ACT Centre grant, Thapar Institute, for extended-reality tools in civil engineering education (1 year).</p></div>
         </article>
       </div>
 
@@ -785,10 +787,10 @@
         </table>
       </div>
 
-      <div class="two-col">
+      <div>
         <div>
           <h3 class="sub-title">Patents</h3>
-          <div class="cards-2" style="grid-template-columns: minmax(0, 1fr);">
+          <div class="cards-3">
             <article class="info-card">
               <div class="top"><span class="status s-pub">Published</span><span class="pod-sub">Indian application 202511005304</span></div>
               <h4>Fasal Kavach: Integrated System for Crop Monitoring, Pest and Disease Detection, and IoT-Enabled Soil Analysis</h4>
@@ -800,24 +802,9 @@
               <p>S. Saxena, Angel, A. Gill, S. Tiwari</p>
             </article>
             <article class="info-card">
-              <div class="top"><span class="status s-pub">Published</span><span class="pod-sub">Indian application 201921046007 (2020)</span></div>
+              <div class="top"><span class="status s-pub">Published</span><span class="pod-sub">Indian application 201921046007</span></div>
               <h4>Image/Video Defogging Method</h4>
               <p>P. Lalwani, D. K. Agrawal, Y. Pathak, A. Aggarwal, S. Tiwari</p>
-            </article>
-          </div>
-        </div>
-        <div>
-          <h3 class="sub-title">Funded projects</h3>
-          <div class="cards-2" style="grid-template-columns: minmax(0, 1fr);">
-            <article class="info-card" style="--c:#e6338f">
-              <div class="top"><span class="amount">₹2.25 crore</span><span class="status s-grant">Granted, Co-PI</span></div>
-              <h4>Graphics, Vision and Visualization</h4>
-              <p>DST-FIST, Department of Science &amp; Technology, 3 years</p>
-            </article>
-            <article class="info-card" style="--c:#0891b2">
-              <div class="top"><span class="amount">₹12 lakh</span><span class="status s-grant">Granted, Co-PI</span></div>
-              <h4>Transforming Civil Engineering Education through the Development of Extended Reality (XR) Tools</h4>
-              <p>ACT Centre, Thapar Institute, 1 year</p>
             </article>
           </div>
         </div>
@@ -1047,6 +1034,8 @@ const PUBS = [
   { y: 2026, t: 'conf', st: 'Accepted', title: 'PW-STAD: Photon-Weighted Structure-Tensor Anisotropic Diffusion for Sparse-View CT Reconstruction', a: 'S. Tiwari, M. Khurana, A. Tiwari', v: 'Indian Conference on Computer Vision, Graphics and Image Processing (ICVGIP 2026)', repo: 'PW-STAD' },
   { y: 2026, t: 'conf', st: 'Accepted', title: 'SIA: A Subject Identifiability Auditing Framework for Detecting Patient-Level Leakage in Medical Imaging Benchmarks', a: 'A. Tiwari, S. Tiwari', v: 'Indian Conference on Computer Vision, Graphics and Image Processing (ICVGIP 2026)', code: 'https://github.com/anuragtiwari575/SIA-subject-identifiability-audit' },
   { y: 2026, t: 'conf', title: 'RED-CTNet: A Mish-activated residual encoder-decoder for low-dose CT reconstruction', a: 'A. P. Singh, M. Khurana, S. Tiwari', v: 'IEEE International Conference on Interdisciplinary Approaches in Technology and Management for Social Innovation (IATMSI 2026)', doi: '10.1109/IATMSI68868.2026.11466013' },
+  { y: 2026, t: 'conf', title: 'MSGNet: A multi-scale transmission guided network for underwater image restoration', a: 'S. Thakur, J. Bhattacharya, S. Tiwari', v: 'IEEE International Conference on Interdisciplinary Approaches in Technology and Management for Social Innovation (IATMSI 2026)', doi: '10.1109/IATMSI68868.2026.11465478' },
+  { y: 2026, t: 'conf', title: 'Multimodal FactCheckNet on low resource social media data', a: 'V. Malagar, A. Sharma, S. Tiwari', v: 'IEEE International Conference on Interdisciplinary Approaches in Technology and Management for Social Innovation (IATMSI 2026)', doi: '10.1109/IATMSI68868.2026.11465680' },
 
   { y: 2025, t: 'journal', title: 'Leveraging feature fusion ensemble of VGG16 and ResNet-50 for automated potato leaf abnormality detection in precision agriculture', a: 'A. K. Trivedi, T. Mahajan, T. Maheshwari, R. Mehta, S. Tiwari', v: 'Soft Computing', d: 'Springer, vol. 29, no. 4, pp. 2263–2277', doi: '10.1007/s00500-025-10523-0', sci: 1, jif: 3.1 },
   { y: 2025, t: 'conf', title: 'Attention based unsupervised CT reconstruction technique for low-dose CT', a: 'R. Gothwal, S. Tiwari, S. Shivani', v: '19th EAI International Conference on Body Area Networks (BodyNets 2025)', d: 'IIT (BHU) Varanasi' },
