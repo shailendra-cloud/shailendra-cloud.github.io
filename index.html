@@ -539,9 +539,10 @@
       </div>
     </div>
 
-    <!-- STATS: update the numbers here when Google Scholar changes -->
+    <!-- STATS: citations, h-index and i10-index update themselves from OpenAlex when the page loads.
+         The numbers written here are only shown if OpenAlex cannot be reached. -->
     <div class="hub-wrap">
-      <div class="hub" role="group" aria-label="Publication metrics, November 2026">
+      <div class="hub" role="group" aria-label="Publication metrics">
         <div class="pod pod-a" style="--c:#16a34a">
           <span class="pod-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h11a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"/><path d="M8 8h6M8 12h6"/></svg></span>
           <strong data-count="all">79</strong><span class="pod-lbl">Publications</span><span class="pod-sub"><span data-count="sci">32</span> SCI/SCIE journal papers, cumulative impact factor <span data-count="jif">87.5</span></span>
@@ -552,18 +553,18 @@
         </div>
         <div class="pod pod-b" style="--c:#2563eb">
           <span class="pod-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h4v4H8a3 3 0 0 0 3 3v2a5 5 0 0 1-5-5zM14 7h4v4h-3a3 3 0 0 0 3 3v2a5 5 0 0 1-5-5z"/></svg></span>
-          <strong>922</strong><span class="pod-lbl">Citations</span><span class="pod-sub">Google Scholar, 730 since 2021</span>
+          <strong data-oa="cites">922</strong><span class="pod-lbl">Citations</span><span class="pod-sub"><span data-oa="src">Google Scholar</span>, <span data-oa="since">730</span> since 2021</span>
         </div>
         <div class="pod pod-c" style="--c:#c026d3">
           <span class="pod-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M2 20h20"/></svg></span>
-          <strong>14</strong><span class="pod-lbl">h-index</span>
+          <strong data-oa="h">14</strong><span class="pod-lbl">h-index</span>
         </div>
         <div class="pod pod-d" style="--c:#f2a900">
           <span class="pod-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span>
-          <strong>25</strong><span class="pod-lbl">i10-index</span>
+          <strong data-oa="i10">25</strong><span class="pod-lbl">i10-index</span>
         </div>
       </div>
-      <p class="hub-note">Citations, h-index and i10-index: Google Scholar, November 2026. Impact factor: sum of journal impact factors from the Web of Science JCR lists of 2021, 2024 and 2026.</p>
+      <p class="hub-note"><span data-oa="note">Citations, h-index and i10-index: Google Scholar, November 2026.</span> Impact factor: sum of journal impact factors from the Web of Science JCR lists of 2021, 2024 and 2026.</p>
     </div>
   </div>
 </section>
@@ -1201,12 +1202,16 @@ const PUBS = [
 
   /* ---------- Counts shown elsewhere on the page, computed from PUBS ---------- */
   safe(() => {
-    const n = { all: PUBS.length, sci: PUBS.filter((p) => p.sci).length,
-      jif: PUBS.reduce((s, p) => s + (p.jif || 0), 0).toFixed(1) };
-    ['journal', 'conf', 'chapter'].forEach((t) => { n[t] = PUBS.filter((p) => p.t === t).length; });
-    document.querySelectorAll('[data-count]').forEach((el) => {
-      if (n[el.dataset.count] !== undefined) el.textContent = n[el.dataset.count];
-    });
+    const update = () => {
+      const n = { all: PUBS.length, sci: PUBS.filter((p) => p.sci).length,
+        jif: PUBS.reduce((s, p) => s + (p.jif || 0), 0).toFixed(1) };
+      ['journal', 'conf', 'chapter'].forEach((t) => { n[t] = PUBS.filter((p) => p.t === t).length; });
+      document.querySelectorAll('[data-count]').forEach((el) => {
+        if (n[el.dataset.count] !== undefined) el.textContent = n[el.dataset.count];
+      });
+    };
+    update();
+    document.addEventListener('pubsupdated', update);
   });
 
   /* ---------- Publications: filter, search, cite ---------- */
@@ -1222,11 +1227,15 @@ const PUBS = [
     const ext = 'target="_blank" rel="noopener"';
     let type = 'all', query = '';
 
-    chips.forEach((ch) => {
+    const chipCounts = () => chips.forEach((ch) => {
       const t = ch.dataset.type;
       const n = t === 'all' ? PUBS.length : PUBS.filter((p) => (t === 'sci' ? p.sci : p.t === t)).length;
       const nEl = ch.querySelector('.n');
       if (nEl) nEl.textContent = n;
+    });
+    chipCounts();
+    chips.forEach((ch) => {
+      const t = ch.dataset.type;
       ch.addEventListener('click', () => {
         type = t;
         chips.forEach((c) => c.setAttribute('aria-pressed', String(c === ch)));
@@ -1264,6 +1273,7 @@ const PUBS = [
     }
     render();
     document.addEventListener('reposloaded', render);
+    document.addEventListener('pubsupdated', () => { chipCounts(); render(); });
 
     document.addEventListener('click', (e) => {
       const b = e.target.closest('[data-cite]');
@@ -1311,6 +1321,99 @@ const PUBS = [
         document.dispatchEvent(new Event('reposloaded'));
       })
       .catch(() => {});
+  });
+
+  /* ---------- OpenAlex (free, open research database): live metrics and new papers ----------
+     When the page loads it reads the OpenAlex profile linked to the ORCID below:
+     citations, h-index and i10-index replace the numbers in the header, and papers
+     published since OA_SINCE that are not in PUBS are added to the list automatically.
+     Results are kept in the visitor's browser for a day. If OpenAlex cannot be reached,
+     the page simply shows what is written in the HTML and in PUBS. */
+  safe(() => {
+    if (!window.fetch) return;
+    const ORCID = '0000-0001-7209-0437';
+    const OA_AUTHOR = 'A5091305946';       // used if the ORCID lookup fails
+    const OA_SINCE = '2025-01-01';         // only papers from this date on are added automatically
+    const HIDE_DOIS = [];                  // DOIs of auto-found papers to leave out, e.g. '10.1109/xyz.2026.123'
+    const API = 'https://api.openalex.org/';
+    const CACHE = 'oa-cache-v1', DAY = 864e5;
+
+    const getJSON = (url) => fetch(url).then((r) => (r.ok ? r.json() : Promise.reject(r.status)));
+    const author = () => getJSON(API + 'authors/orcid:' + ORCID).catch(() => getJSON(API + 'authors/' + OA_AUTHOR));
+    const works = (id) => getJSON(API + 'works?filter=author.id:' + id + ',from_publication_date:' + OA_SINCE +
+      '&sort=publication_date:desc&per-page=100&select=id,doi,display_name,publication_year,type,primary_location,authorships');
+
+    let cached = null;
+    try { const c = JSON.parse(localStorage.getItem(CACHE)); if (c && Date.now() - c.t < DAY) cached = c; } catch (e) {}
+    const load = cached ? Promise.resolve(cached) : author().then((a) => {
+      const id = String(a.id || '').split('/').pop();
+      return works(id).catch(() => ({ results: [] })).then((w) => {
+        const data = { t: Date.now(), a: { id: id, cited: a.cited_by_count, h: (a.summary_stats || {}).h_index,
+          i10: (a.summary_stats || {}).i10_index, years: a.counts_by_year || [] }, w: w.results || [] };
+        try { localStorage.setItem(CACHE, JSON.stringify(data)); } catch (e) {}
+        return data;
+      });
+    });
+
+    // header metrics
+    const showMetrics = (a) => {
+      if (typeof a.cited !== 'number') return;
+      const since = a.years.filter((y) => y.year >= 2021).reduce((s, y) => s + (y.cited_by_count || 0), 0);
+      const set = (k, v) => document.querySelectorAll('[data-oa="' + k + '"]').forEach((el) => { el.textContent = v; });
+      set('cites', a.cited); set('since', since); set('src', 'OpenAlex');
+      if (typeof a.h === 'number') set('h', a.h);
+      if (typeof a.i10 === 'number') set('i10', a.i10);
+      set('note', 'Citations, h-index and i10-index: OpenAlex, updated automatically.');
+    };
+
+    // new papers
+    const norm = (s) => String(s || '').replace(/<[^>]+>/g, ' ').normalize('NFKD').replace(/[̀-ͯ]/g, '')
+      .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+    const words = (s) => new Set(norm(s).split(' ').filter((x) => x.length > 2));
+    const similar = (a, b) => {
+      const A = words(a), B = words(b);
+      if (!A.size || !B.size) return false;
+      let k = 0; A.forEach((x) => { if (B.has(x)) k++; });
+      return (2 * k) / (A.size + B.size) >= 0.8;
+    };
+    const cleanDoi = (d) => String(d || '').replace(/^https?:\/\/(dx\.)?doi\.org\//i, '').toLowerCase();
+    const initials = (name) => {
+      const parts = String(name || '').replace(/\s+/g, ' ').trim().split(' ');
+      if (parts.length < 2) return parts[0] || '';
+      const last = parts.pop();
+      return parts.map((w) => w.split('-').map((x) => (x ? x[0].toUpperCase() + '.' : '')).join('-')).join(' ') + ' ' + last;
+    };
+    const SKIP_TYPES = new Set(['preprint', 'paratext', 'erratum', 'editorial', 'letter', 'peer-review', 'dataset',
+      'retraction', 'supplementary-materials', 'other', 'grant', 'standard', 'libguides', 'reference-entry']);
+    const addWorks = (list, myId) => {
+      const known = new Set(PUBS.map((p) => cleanDoi(p.doi)).filter(Boolean));
+      const hide = new Set(HIDE_DOIS.map(cleanDoi));
+      const added = [];
+      list.forEach((w) => {
+        const doi = cleanDoi(w.doi);
+        const src = (w.primary_location || {}).source || {};
+        const title = String(w.display_name || '').replace(/<[^>]+>/g, '').trim();
+        if (!doi || !title || !w.publication_year || known.has(doi) || hide.has(doi)) return;
+        if (SKIP_TYPES.has(w.type) || src.type === 'repository') return;
+        if (PUBS.some((p) => similar(p.title, title)) || added.some((p) => similar(p.title, title))) return;
+        const t = src.type === 'conference' ? 'conf' : (w.type === 'book-chapter' || /book/.test(src.type || '')) ? 'chapter' : 'journal';
+        const a = (w.authorships || []).map((x) => {
+          const au = x.author || {};
+          const mine = String(au.id || '').endsWith(myId) || String(au.orcid || '').endsWith(ORCID);
+          return mine ? 'S. Tiwari' : initials(au.display_name);
+        }).filter(Boolean).join(', ');
+        known.add(doi);
+        added.push({ y: w.publication_year, t: t, title: title, a: a, v: src.display_name || '', doi: doi, auto: true });
+      });
+      if (!added.length) return;
+      const order = { journal: 0, conf: 1, chapter: 2 };
+      added.slice(0, 30).forEach((p) => PUBS.push(p));
+      const idx = new Map(PUBS.map((p, i) => [p, i]));
+      PUBS.sort((p, q) => (q.y - p.y) || (order[p.t] - order[q.t]) || (idx.get(p) - idx.get(q)));
+      document.dispatchEvent(new Event('pubsupdated'));
+    };
+
+    load.then((d) => { showMetrics(d.a); addWorks(d.w, d.a.id); }).catch(() => {});
   });
 
   /* ---------- The scan: Shepp–Logan phantom → sinogram → filtered back-projection ----------
