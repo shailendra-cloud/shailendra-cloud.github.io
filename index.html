@@ -251,6 +251,16 @@
     .hero .news.expanded { max-height: 440px; overflow-y: auto; padding-right: 8px; overscroll-behavior: contain; }
   }
   @media (max-width: 980px) { .hero .news-card { justify-self: stretch; max-width: none; } }
+  /* news ticker: the list is doubled and slides up by half its height, so it loops without a jump */
+  .ticker .news-view { height: 400px; overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%); }
+  .ticker .news { animation: news-up var(--news-dur, 40s) linear infinite; will-change: transform; }
+  .ticker .news li, .ticker .news li:first-child { border-top: 0; border-bottom: 1px solid var(--line); }
+  .ticker .news li.more { display: grid; }
+  .ticker .news-view:hover .news, .ticker.paused .news { animation-play-state: paused; }
+  @keyframes news-up { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+  @media (max-width: 560px) { .ticker .news-view { height: 360px; } }
   .prose { max-width: 70ch; }
   .prose p { margin: 0 0 18px; font-size: 17.5px; line-height: 1.8; color: var(--text-2); }
   .prose p:last-child { margin-bottom: 0; }
@@ -486,6 +496,9 @@
     .site-header, .scan-band, .pub-tools, .act, .link-btn, .actions, .blob, .dot, .cta .btn, .footer .btn { display: none !important; }
     .section, .hero, .footer { background: #fff !important; color: #000 !important; }
     .news li.more { display: grid; }
+    .ticker .news-view { height: auto; overflow: visible; -webkit-mask-image: none; mask-image: none; }
+    .ticker .news { animation: none; transform: none; }
+    .news li[aria-hidden="true"] { display: none; }
   }
 </style>
 </head>
@@ -547,7 +560,10 @@
 
     <aside class="news-card" aria-labelledby="news-title">
       <h3 id="news-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0V11h4"/><path d="M10 6h6M10 10h6M10 14h4"/></svg>Latest news</h3>
-      <!-- NEWS: newest first. Items with class="more" stay hidden until "Show all". -->
+      <!-- NEWS: newest first. The list scrolls by itself like a news ticker (it pauses under the mouse
+           and with the Pause button). For visitors who turn off animation, items with class="more"
+           stay hidden until "Show all". -->
+      <div class="news-view" id="news-view">
       <ol class="news" id="news">
         <li><time>2026</time><span>Poisson-constrained ℓ<sub>1/2</sub> directional total variation for low-dose limited-angle CT accepted at <strong>IEEE CMES 2027</strong>.</span></li>
         <li><time>2026</time><span>Two papers accepted at <strong>OCIT 2026</strong>: <em>SQI-Adapt</em> for multimodal driver drowsiness detection and <em>CRF-PMSAM</em> for sEMG gesture recognition.</span></li>
@@ -561,7 +577,9 @@
         <li class="more"><time>2026</time><span>Three papers published at <strong>IEEE IATMSI 2026</strong>: <em>RED-CTNet</em> for low-dose CT, <em>MSGNet</em> for underwater image restoration and <em>Multimodal FactCheckNet</em> for fake-news detection.</span></li>
         <li class="more"><time>2025</time><span>Patent application <em>Fasal Kavach</em> published (Indian application 202511005304).</span></li>
       </ol>
+      </div>
       <button class="link-btn" id="news-toggle" type="button" aria-expanded="false" aria-controls="news">Show all news</button>
+      <button class="link-btn" id="news-pause" type="button" aria-pressed="false" hidden>Pause</button>
     </aside>
   </div>
 </section>
@@ -1183,11 +1201,45 @@ const PUBS = [
     byId.forEach((a, id) => { const s = document.getElementById(id); if (s) io.observe(s); });
   });
 
-  /* ---------- News: show all ---------- */
+  /* ---------- News: auto-scrolling ticker; "Show all" for visitors who turn off animation ---------- */
   safe(() => {
     const btn = document.getElementById('news-toggle'), list = document.getElementById('news');
+    const view = document.getElementById('news-view'), pause = document.getElementById('news-pause');
+    const card = list.closest('.news-card');
+    const items = Array.from(list.children);
+    // fixed colour per item, so the copied half of the ticker matches the original
+    const COLORS = ['#3333b2', '#e6338f', '#16a34a', '#f97316', '#0891b2', '#7c3aed'];
+    items.forEach((li, i) => li.style.setProperty('--c', COLORS[i % COLORS.length]));
+
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce && view && pause && card && items.length > 3) {
+      items.forEach((li) => {
+        const copy = li.cloneNode(true);
+        copy.setAttribute('aria-hidden', 'true');
+        list.appendChild(copy);
+      });
+      card.classList.add('ticker');
+      btn.hidden = true;
+      pause.hidden = false;
+      const SPEED = 28; // pixels per second
+      const setSpeed = () => {
+        const half = list.scrollHeight / 2;
+        if (half < view.clientHeight) { card.classList.remove('ticker'); return; }
+        list.style.setProperty('--news-dur', (half / SPEED).toFixed(1) + 's');
+      };
+      setSpeed();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(setSpeed);
+      window.addEventListener('resize', setSpeed);
+      pause.addEventListener('click', () => {
+        const paused = card.classList.toggle('paused');
+        pause.setAttribute('aria-pressed', String(paused));
+        pause.textContent = paused ? 'Play' : 'Pause';
+      });
+      return;
+    }
+
     if (!list.querySelectorAll('li.more').length) { btn.hidden = true; return; }
-    const label = 'Show all news (' + list.children.length + ')';
+    const label = 'Show all news (' + items.length + ')';
     btn.textContent = label;
     btn.addEventListener('click', () => {
       const open = list.classList.toggle('expanded');
